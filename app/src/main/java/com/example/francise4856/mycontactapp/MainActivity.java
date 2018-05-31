@@ -1,5 +1,6 @@
 package com.example.francise4856.mycontactapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -76,6 +77,37 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle(title);
         builder.setMessage(message);
         builder.show();
+    }
+
+    public static final String EXTRA_MESSAGE = "com.example.francise4856.mycontactapp.MESSAGE";
+    public void SearchRecord(View view) {
+        Log.d("MyContactApp", "MainActivity: launching SearchActivity");
+
+        Cursor cursor = myDb.getAllData();
+        StringBuffer message = new StringBuffer();
+
+        Log.d("MyContactApp", "MainActivity: created string buffer");
+
+        while (cursor.moveToNext()) {
+            if (cursor.getString(1).equals(editName.getText().toString())) {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    for (int j = 0; j < cursor.getColumnNames().length; j++) {
+                        message.append(cursor.getString(j) + "\n");
+                    }
+                    message.append("\n");
+                    cursor.moveToNext();
+                }
+            }
+            //Append res column, 0,1,2,3 to the buffer, delimited by "/n"
+
+        }
+
+
+        Log.d("MyContactApp", "MainActivity: constructed message" + message.toString() + "hello");
+        android.content.Intent intent = new android.content.Intent(this, SearchActivity2.class);
+        intent.putExtra(EXTRA_MESSAGE, message.toString());
+        startActivity(intent);
+        Log.d("MyContactApp", "MainActivity: started SearchActivity");
     }
 
 
